@@ -50,7 +50,15 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView.builder(itemBuilder: (context,index){
 
             if(index==0){
-              return DrawerHeader(child: Container());
+              return DrawerHeader(child: Column(
+                children: [
+                  textAvecStyle("Mes Villes",fontSize: 20.0,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.white,elevation: 8),
+                  onPressed: ajoutVille, child:textAvecStyle("Ajouter une ville",color: Colors.blue), )
+                ],
+              ));
             }else if (index==1){
               return ListTile(
                 title: textAvecStyle("Ma ville actuel"),
@@ -96,5 +104,22 @@ class _MyHomePageState extends State<MyHomePage> {
   Text textAvecStyle(String data,{color:Colors.white,fontSize:17.0,fontStyle:FontStyle.italic,textAlign:TextAlign.center}){
     return Text(data,style: TextStyle(color: color,fontSize: fontSize,fontStyle: fontStyle),);
 
+  }
+
+  Future<void> ajoutVille() async{
+    return  showDialog(barrierDismissible: true,context: context, builder: (BuildContext ctx){
+        return SimpleDialog(
+          contentPadding: EdgeInsets.all(20),
+          title: textAvecStyle("Ajoutez une ville",fontSize: 22.0,color: Colors.blue),
+          children: [
+            TextField(
+              decoration: InputDecoration(labelText: "ville"),
+              onSubmitted: (String str){
+                Navigator.pop(context);
+              }
+            )
+          ],
+        );
+    });
   }
 }
