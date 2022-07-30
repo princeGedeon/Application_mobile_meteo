@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,8 +32,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> villes=['Paris',"Bénin","Cotonou"];
+  String key="villes";
+  List<String> villes=[];
   String villeChoisie="";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    obtenir();
+    print(villes);
+  }
 
 
   @override
@@ -61,6 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ));
             }else if (index==1){
               return ListTile(
+                trailing: IconButton(icon: Icon(Icons.delete,color: Colors.white,),onPressed: (){
+                  suprrimer(villes[index]);
+                },),
                 title: textAvecStyle("Ma ville actuel"),
                 onTap: (){
                   setState((){
@@ -115,11 +127,41 @@ class _MyHomePageState extends State<MyHomePage> {
             TextField(
               decoration: InputDecoration(labelText: "ville"),
               onSubmitted: (String str){
+                ajouter(str);
+
                 Navigator.pop(context);
               }
             )
           ],
         );
     });
+  }
+
+  void obtenir() async{
+    SharedPreferences sharedpreference=await SharedPreferences.getInstance();
+    List<String>? liste=await sharedpreference.getStringList(key);
+    if (liste!=null){
+      setState((){
+
+        villes=liste;
+      });
+
+    }
+  }
+
+  void ajouter(String str) async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    villes.add(str);
+    await sharedPreferences.setStringList(key, villes);
+    obtenir();
+
+  }
+
+  void suprrimer(String str) async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    villes.remove(str);
+    await sharedPreferences.setStringList(key, villes);
+    obtenir();
+
   }
 }
