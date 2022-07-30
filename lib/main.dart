@@ -48,33 +48,53 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           color: Colors.blue,
           child: ListView.builder(itemBuilder: (context,index){
-            return ListTile(
-              title: Text(villes[index]),
-              onTap: (){
+
+            if(index==0){
+              return DrawerHeader(child: Container());
+            }else if (index==1){
+              return ListTile(
+                title: textAvecStyle("Ma ville actuel"),
+                onTap: (){
                   setState((){
-                    villeChoisie=villes[index];
+                    villeChoisie="";
                     Navigator.pop(context);
                   });
+                },
+              );
 
-              },
+            }else {
+              return ListTile(
+                title: Text(villes[index-2]),
+                onTap: () {
+                  setState(() {
+                    villeChoisie = villes[index-2];
+                    print(villeChoisie);
+                    Navigator.pop(context);
+                  });
+                }
+
             );
-          },itemCount: villes.length,),
+            }}
+          ,itemCount: villes.length+2,),
         ),
       ),
+
       body: Center(
 
         child: Column(
 
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text((villeChoisie==null)?"Ville actuel":villeChoisie),
+            textAvecStyle((villeChoisie==null)?"Ville actuel":villeChoisie,color: Colors.blue),
           ],
         ),
       ),
 
     );
+  }
+
+  Text textAvecStyle(String data,{color:Colors.white,fontSize:17.0,fontStyle:FontStyle.italic,textAlign:TextAlign.center}){
+    return Text(data,style: TextStyle(color: color,fontSize: fontSize,fontStyle: fontStyle),);
+
   }
 }
